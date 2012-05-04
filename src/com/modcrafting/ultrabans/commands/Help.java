@@ -36,22 +36,11 @@ public class Help implements CommandExecutor{
 			sender.sendMessage("/ipban      {player} (-s/-a) {reason}");
 			sender.sendMessage("/tempipban  {player} (-s/-a) {amt} {sec/min/hour/day} {Reason}");
 			sender.sendMessage("/unban      {player}");
-			sender.sendMessage("/jail (set/pardon/{player}) {player}");
-			sender.sendMessage("/tempjail   {player} (-s/-a) {amt} {sec/min/hour/day} {Reason}");
 			sender.sendMessage("/checkban   {player}");
 			sender.sendMessage("/checkip    {player}");
-			sender.sendMessage("/dupeip     {player}");
 			sender.sendMessage("/history    {amt}");
 			sender.sendMessage("/kick       {player} (-s/-a) {reason}");
-			sender.sendMessage("/warn       {player} (-s/-a) {reason}");
-			sender.sendMessage("/fine       {player} (-s/-a) {amt}");
-			sender.sendMessage("/umute      {player}");
-			sender.sendMessage("/empty      {player}");
-			sender.sendMessage("/forcespawn {player}");
-			sender.sendMessage("/starve     {player}");
-			sender.sendMessage("/rules      (help)");
 			sender.sendMessage("/editban    (help)");
-			sender.sendMessage("/lockdown   {on/off/status}");
 			sender.sendMessage("/uhelp /exportbans /importbans /ureload /uversion");
 			return true;
 		}
@@ -67,16 +56,7 @@ public class Help implements CommandExecutor{
 		if (plugin.permission.has(player, "ultraban.check"))sender.sendMessage(ChatColor.GRAY + "/checkban /checkip /dupeip {player}");
 		if (plugin.permission.has(player, "ultraban.kick"))sender.sendMessage(ChatColor.GRAY + "/kick {player} {reason}");
 		if (plugin.permission.has(player, "ultraban.warn"))sender.sendMessage(ChatColor.GRAY + "/warn {player} {reason}");
-		if (plugin.permission.has(player, "ultraban.fine"))sender.sendMessage(ChatColor.GRAY + "/fine {player} {amt}");
-		if (plugin.permission.has(player, "ultraban.emtpy"))sender.sendMessage(ChatColor.GRAY + "/empty {player}");
-		if (plugin.permission.has(player, "ultraban.spawn"))sender.sendMessage(ChatColor.GRAY + "/forcespawn {player}");
-		if (plugin.permission.has(player, "ultraban.starve"))sender.sendMessage(ChatColor.GRAY + "/starve {player}");
-		if (plugin.permission.has(player, "ultraban.mute"))sender.sendMessage(ChatColor.GRAY + "/umute (unmute/{player}) {player}");
-		if (plugin.permission.has(player, "ultraban.rules"))sender.sendMessage(ChatColor.GRAY + "/rules (help)");
 		if (plugin.permission.has(player, "ultraban.editban"))sender.sendMessage(ChatColor.GRAY + "/editban (help)");
-		if (plugin.permission.has(player, "ultraban.jail"))sender.sendMessage(ChatColor.GRAY + "/jail (set/pardon/{player}) {player}");		
-		if (plugin.permission.has(player, "ultraban.tempjail"))sender.sendMessage(ChatColor.GRAY + "/tempjail {player} {amt} {sec/min/hour/day} {Reason}");
-		if (plugin.permission.has(player, "ultraban.lockdown"))sender.sendMessage(ChatColor.GRAY + "/lockdown {on/off/status}");
 		if (plugin.permission.has(player, "ultraban.admin")) sender.sendMessage(ChatColor.GRAY + "/uhelp /exportbans /ureload /uversion /importbans");
 		return true;
 			}

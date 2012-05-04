@@ -56,11 +56,11 @@ public class Tempban implements CommandExecutor{
 			if (plugin.setupPermissions()){
 				if (plugin.permission.has(player, "ultraban.tempban")) auth = true;
 			}else{
-			 if (player.isOp()) auth = true; //defaulting to Op if no vault doesn't take or node
+			 if (player.isOp()) auth = true;
 			}
 			admin = player.getName();
 		}else{
-			auth = true; //if sender is not a player - Console
+			auth = true;
 		}
 		if (!auth){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
@@ -68,18 +68,12 @@ public class Tempban implements CommandExecutor{
 		}
 		if (args.length < 3) return false;
 
-		String p = args[0]; // Get the victim's potential name
+		String p = args[0];
 		
 		if(autoComplete)
 			p = expandName(p);
 		Player victim = plugin.getServer().getPlayer(p);
-		
-		//Figured this out after the fact...... Ugh
-		//Neglect to study bukkit. 
-		//Screw it if it works... go with it.
-		//victim = Bukkit.getOfflinePlayer(p).getPlayer();
-
-		
+				
 		String reason = config.getString("defReason", "not sure");
 		boolean broadcast = true;
 		if(args.length > 3){

@@ -1,6 +1,6 @@
-name: UltraBan
+name: UltraBanLite
 main: com.modcrafting.ultrabans.UltraBan
-version: 0.2.4
+version: 0.2.5
 website: http://modcrafting.com
 author: Deathmarine
 description: >
@@ -27,9 +27,6 @@ commands:
   checkip:
     description: Check a players ip
     usage: /<command> player
-  dupeip:
-    description: Check a players ip against all players
-    usage: /<command> player
   permaban:
     description: Unbannable Banning
     usage: /<command> player [reason] - Permaban
@@ -51,31 +48,6 @@ commands:
   warn:
     description: Warn a player
     usage: /<command> player [reason] - Warn a player
-  fine:
-    description: Fine a player
-    usage: /<command> player [amt] - Fine a player
-  empty:
-    description: Empty player inventory.
-    usage: /<command> player - Empty a players inventory
-  forcespawn:
-    description: Sends player to spawn/home
-    usage: /<command> player - Sends player to spawn/home
-  starve:
-    description: Removes food from player
-    usage: /<command> player - Removes food from player
-  jail:
-    description: Jail player
-    usage: /<command> <set/pardon/player> player - pardon player
-  tempjail:
-    description: Temporary Jail Player
-    usage: /<command> player time timeform [reason]
-  umute:
-    description: Mute player
-    usage: /<command> <player> player - mutes / unmutes player
-    aliases: [mute,unmute,uumute,ununmute,uunmute]
-  lockdown:
-    description: Lockdown the Server
-    usage: /<command> <on/off/status>
   editban:
     description: Edit a ban
     usage: /<command> <list/load/id/save/view/reason/time/cancel/help>
