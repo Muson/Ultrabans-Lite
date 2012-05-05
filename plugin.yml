@@ -37,6 +37,7 @@ commands:
   ipban:
     description: IP-ban a player
     usage: /<command> {player} (-s/-a) {reason}
+    aliases: [banip]
   exportbans:
     description: Export bans to banned-players.txt
     usage: /<command>
