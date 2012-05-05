@@ -12,24 +12,12 @@ mysql-table-ip: banlistip
 sqlite-dbname: banlist
 #parameters#
 auto-complete: true
-#Command Checks#
-useFine: true
-#Max allowable fine#
-#If Zero then no max will be placed#
-maxFineAmt: 0
-#Disable command usage on muted#
-muteVanilla: true
 #Max Warnings#
 enableMaxWarn: false
 maxWarnings: 5
 #Default labels#
 defAdminName: 'server'
 defReason: 'not sure'
-#change to true or false to enable lockdown#
-#also can be done ingame /lockdown#
-lockdown: false
-#Enabling dupePolicy will disallow duplicate IP connections#
-dupePolicy: false
 #Messages#
 messages:
   banMsgFailed: '&4%victim% &7is already banned!'
@@ -49,36 +37,8 @@ messages:
   LoginTempban: '&7You are banned until &4%time%&7! Reason: &4%reason%!'
   LoginBan: '%admin% banned you from this server! Reason: %reason%!'
   LoginIPBan: 'Your IP is banned!'
-  fineMsgVictim: 'You have been fined by %admin% in the amount of %amt%!'
-  fineMsgBroadcast: '&4%victim% &7was fined by &3%admin%&7 in the amount of &4%amt%!'
-  emptyMsgVictim: '&3%admin% has cleared your inventory!'
-  emptyMsgBroadcast: '&3%admin% has cleared the inventory of &4%victim%!'
-  starveMsgVictim: '&7You are now starving!'
-  starveMsgBroadcast: '&4%victim% is now starving!'
-  fspawnMsgVictim: '&7You have been sent to spawn!'
-  fspawnMsgBroadcast: '&4%victim% &7is now at spawn!'
-  jailMsgVictim: '&7You have been jailed by &3%admin%&7. Reason: &4%reason%!'
-  jailMsgRelease: '&4%victim% &7was released from jail by &3%admin%&7!'
-  jailMsgBroadcast: '&4%victim% &7was jailed by &3%admin%&7. Reason: &4%reason%!'
   warnMsgVictim: '&7You have been warned by &3%admin%&7. Reason: &4%reason%!'
   warnMsgBroadcast: '&4%victim% &7was warned by &3%admin%&7. Reason: &4%reason%!'
-  lockMsgLogin: 'Server is under a lockdown, Try again later! Sorry.'
-  DupeIPKick: 'Duplicate IP addresses disabled.'
-  jailCmdMsg: 'You cannot use commands while jailed!'
-  jailChatMsg: 'Your cry falls on deaf ears.'
-  jailPlaceMsg: 'You cannot place blocks while you are jailed!'
-  jailBreakMsg: 'You cannot break blocks while you are jailed!'
-  tempjailMsgVictim: 'You have been temp. jailed by %admin%. Reason: %reason%!'
-  tempjailMsgBroadcast: '&4%victim% &7was temp. jailed by &3%admin%&7. Reason: &4%reason%!'
   tempipbanMsgVictim: 'You have been temp. ipbanned by %admin%. Reason: %reason%!'
   tempipbanMsgBroadcast: '&4%victim% &7was temp. ipbanned by &3%admin%&7. Reason: &4%reason%!'
-  muteChatMsg: 'You have been muted!'
-  unmuteMsgVictim: 'You have been unmuted.'
-  unmuteMsg: 'You have unmuted %victim%.'
-#Do Not Change Values Below#
-jail:
-  x: 0
-  y: 0
-  z: 0
-  yaw: 0
-  pitch: 0
+
