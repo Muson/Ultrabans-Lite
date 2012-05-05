@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.modcrafting.ultrabans.commands.Ban;
 import com.modcrafting.ultrabans.commands.Check;
@@ -42,19 +41,13 @@ public class UltraBan extends JavaPlugin {
 
 	public final static Logger log = Logger.getLogger("Minecraft");
 	public SQLDatabases db = new SQLDatabases();
-	//public IPScope ipscope = new IPScope(this);
 	public String maindir = "plugins/UltraBan/";
 	public HashSet<String> bannedPlayers = new HashSet<String>();
 	public HashSet<String> bannedIPs = new HashSet<String>();
-	public HashSet<String> jailed = new HashSet<String>();
-	public HashSet<String> muted = new HashSet<String>();
 	public Map<String, Long> tempBans = new HashMap<String, Long>();
 	public Map<String, Long> tempJail = new HashMap<String, Long>();
 	public Map<String, EditBan> banEditors = new HashMap<String, EditBan>();
 	private final UltraBanPlayerListener playerListener = new UltraBanPlayerListener(this);
-	private final UltraBanBlockListener blockListener = new UltraBanBlockListener(this);
-	public net.milkbowl.vault.permission.Permission permission = null;
-	public net.milkbowl.vault.economy.Economy economy = null;
 	public boolean autoComplete;
 	
 	public void onDisable() {
@@ -62,8 +55,6 @@ public class UltraBan extends JavaPlugin {
 		tempJail.clear();
 		bannedPlayers.clear();
 		bannedIPs.clear();
-		jailed.clear();
-		muted.clear();
 		banEditors.clear();
 		System.out.println("UltraBan disabled.");
 	}
@@ -111,29 +102,12 @@ public class UltraBan extends JavaPlugin {
 		loadCommands();
 		if (Config != null) log.log(Level.INFO, "[" + pdfFile.getName() + "]" + " Configuration: config.yml Loaded!");
 		db.initialize(this);
-		db.loadJailed();
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
-		pm.registerEvents(blockListener, this);
 		log.log(Level.INFO, "[" + pdfFile.getName() + "] Listeners enabled, Server is secured.");
 		log.log(Level.INFO,"[" + pdfFile.getName() + "]" + " version " + pdfFile.getVersion() + " has been initialized!" );
 		
 	}
-	public Boolean setupPermissions()
-    {
-        RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-        if (permissionProvider != null) {
-            permission = permissionProvider.getProvider();
-        }
-        return (permission != null);
-    }
-/*	public boolean setupEconomy(){
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-			if (economyProvider != null) {
-				economy = economyProvider.getProvider();
-			}
-				return (economy != null);
-		}*/
 	public void loadCommands(){
 
 		getCommand("ban").setExecutor(new Ban(this));

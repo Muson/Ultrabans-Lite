@@ -1,41 +1,42 @@
-name: UltraBanLite
-main: com.modcrafting.ultrabans.UltraBan
-version: 0.2.5
+name: UltraBan
+version: 0.2.6
 website: http://modcrafting.com
 author: Deathmarine
 description: >
              Administration Plugin for Bukkit.
+main: com.modcrafting.ultrabans.UltraBan
+#Load her up, SON#
 commands:
   kick:
     description: Kick a player
-    usage: /<command> player [reason] - Kick a player
+    usage: /<command> {player / * } (-s/-a) {reason}
   tempban:
     description: Temporarily ban a player
-    usage: /<command> player time timeform [reason] - Temporarily ban a player
+    usage: /<command> {player} (-s/-a) {amt} {sec/min/hour/day} {Reason}
   tempipban:
     description: Temporarily ipban a player
-    usage: /<command> player time timeform [reason] - Temporarily ipban a player
+    usage: /<command> {player} (-s/-a) {amt} {sec/min/hour/day} {Reason}
   ban:
     description: Ban a player
-    usage: /<command> player [reason] - Ban a player
+    usage: /<command> {player} (-s/-a) {reason}
   unban:
     description: Unban a player
-    usage: /<command> player - Unban a player
+    usage: /<command> {player}
   checkban:
     description: Check if a player is banned
-    usage: /<command> player
+    usage: /<command> {player}
   checkip:
     description: Check a players ip
-    usage: /<command> player
+    usage: /<command> {player}
   permaban:
     description: Unbannable Banning
-    usage: /<command> player [reason] - Permaban
+    usage: /<command> {player} (-s/-a) {reason}
   ureload:
     description: Reload the banlist
     usage: /<command>
   ipban:
     description: IP-ban a player
-    usage: /<command> player [reason]
+    usage: /<command> {player} (-s/-a) {reason}
   exportbans:
     description: Export bans to banned-players.txt
     usage: /<command>
@@ -44,10 +45,10 @@ commands:
     usage: /<command>
   history:
     description: shows recent entries
-    usage: /<command>
+    usage: /<command> {amt}
   warn:
     description: Warn a player
-    usage: /<command> player [reason] - Warn a player
+    usage: /<command> {player} (-s/-a) {reason}
   editban:
     description: Edit a ban
     usage: /<command> <list/load/id/save/view/reason/time/cancel/help>
@@ -59,3 +60,79 @@ commands:
     description: Shows current Ultrabans Version
     usage: /<command>
     aliases: [uv,uver]
+permissions:
+  ultraban.*:
+    description: Allows the Administration to Full Control
+    children:
+      ultraban.ban: true
+      ultraban.tempban: true
+      ultraban.ipban: true
+      ultraban.tempipban: true
+      ultraban.permaban: true
+      ultraban.unban: true
+      ultraban.check: true
+      ultraban.checkip: true
+      ultraban.kick: true
+      ultraban.kick.all: true
+      ultraban.warn: true
+      ultraban.history: true
+      ultraban.editban: true
+      ultraban.help: true
+      ultraban.reload: true
+      ultraban.version: true
+      ultraban.export: true
+      ultraban.import: true
+  ultraban.ban:
+    default: op
+    description: Allows the Administration to ban a player
+  ultraban.tempban:
+    default: op
+    description: Allows the Administration to temporarily ban a player
+  ultraban.ipban:
+    default: op
+    description: Allows the Administration to ban the players ip
+  ultraban.tempipban:
+    default: op
+    description: Allows the Administration to temporarily ban players ip
+  ultraban.permaban:
+    default: op
+    description: Allows the Administration to permaban a player
+  ultraban.unban:
+    default: op
+    description: Allows the Administration to unban a player
+  ultraban.check:
+    default: op
+    description: Allows the Administration to pull information about a player
+  ultraban.checkip:
+    default: op
+    description: Allows the Administration to check a players ip or dupeip
+  ultraban.kick:
+    default: op
+    description: Allows the Administration to kick a player from the server
+  ultraban.kick.all:
+    default: op
+    description: Allows the Administration to all players excluding themselves
+    children:
+      ultraban.kick: true
+  ultraban.warn:
+    default: op
+    description: Allows the Administration to warn a player
+  ultraban.history:
+    default: op
+    description: Allows the Administration to a history of entries
+  ultraban.editban:
+    default: op
+    description: Allows the Administration to edit a previous ban
+  ultraban.help:
+    default: op
+    description: Allows the use of the help function
+  ultraban.reload:
+    default: op
+    description: Allows the use of the reload function
+  ultraban.version:
+    default: true
+    description: Allows the user to view the version
+  ultraban.import:
+    description: Allows the user to import a banlist
+  ultraban.export:
+    description: Allows the user to export a banlist
