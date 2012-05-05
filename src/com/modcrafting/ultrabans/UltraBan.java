@@ -41,18 +41,16 @@ public class UltraBan extends JavaPlugin {
 
 	public final static Logger log = Logger.getLogger("Minecraft");
 	public SQLDatabases db = new SQLDatabases();
-	public String maindir = "plugins/UltraBan/";
+	public String maindir = "plugins/UltraBanLite/";
 	public HashSet<String> bannedPlayers = new HashSet<String>();
 	public HashSet<String> bannedIPs = new HashSet<String>();
 	public Map<String, Long> tempBans = new HashMap<String, Long>();
-	public Map<String, Long> tempJail = new HashMap<String, Long>();
 	public Map<String, EditBan> banEditors = new HashMap<String, EditBan>();
 	private final UltraBanPlayerListener playerListener = new UltraBanPlayerListener(this);
 	public boolean autoComplete;
 	
 	public void onDisable() {
 		tempBans.clear();
-		tempJail.clear();
 		bannedPlayers.clear();
 		bannedIPs.clear();
 		banEditors.clear();
