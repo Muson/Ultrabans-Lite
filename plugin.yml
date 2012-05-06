@@ -1,5 +1,5 @@
 name: UltraBanLite
-version: 0.2.6
+version: 0.2.7
 website: http://modcrafting.com
 author: Deathmarine
 description: >
@@ -83,6 +83,18 @@ permissions:
       ultraban.version: true
       ultraban.export: true
       ultraban.import: true
+      ultraban.override.*: true
+  ultraban.override.*:
+    description: Allows the Administration to Override Commands
+    children:
+      ultraban.override.ban: true
+      ultraban.override.ipban: true
+      ultraban.override.kick: true
+      ultraban.override.kick.all: true
+      ultraban.override.permaban: true
+      ultraban.override.tempban: true
+      ultraban.override.tempipban: true
+      ultraban.override.warn: true
   ultraban.ban:
     default: op
     description: Allows the Administration to ban a player
@@ -137,3 +149,19 @@ permissions:
     description: Allows the user to import a banlist
   ultraban.export:
     description: Allows the user to export a banlist
+  ultraban.override.ban:
+    description: Allows the Administration to override bans
+  ultraban.override.ipban:
+    description: Allows the Administration to override ipbans
+  ultraban.override.kick:
+    description: Allows the Administration to override kick
+  ultraban.override.kick.all:
+    description: Allows the Administration to override kickall
+  ultraban.override.permaban:
+    description: Allows the Administration to override permabans
+  ultraban.override.tempban:
+    description: Allows the Administration to override tempban
+  ultraban.override.tempipban:
+    description: Allows the Administration to override tempipban
+  ultraban.override.warn:
+    description: Allows the Administration to override warn

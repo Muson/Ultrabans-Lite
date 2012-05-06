@@ -83,6 +83,15 @@ public class Warn implements CommandExecutor{
 			
 		}
 		if(victim != null){
+			if(victim.getName() == admin){
+				sender.sendMessage(ChatColor.RED + "You cannot emowarn yourself!");
+				return true;
+			}
+			if(victim.hasPermission( "ultraban.override.warn")){
+				sender.sendMessage(ChatColor.RED + "Your warning has been denied! Player Notified!");
+				victim.sendMessage(ChatColor.RED + "Player:" + admin + " Attempted to warn you!");
+				return true;
+			}	
 			if(config.getBoolean("enableMaxWarn", false)){
 				Integer max = config.getInt("maxWarnings", 5);
 				if(plugin.db.maxWarns(victim.getName()) != null &&  plugin.db.maxWarns(victim.getName()).size() > max){
@@ -122,6 +131,13 @@ public class Warn implements CommandExecutor{
 				
 			}	
 		}else{
+			victim = plugin.getServer().getOfflinePlayer(p).getPlayer();
+			if(victim != null){
+				if(victim.hasPermission( "ultraban.override.warn")){
+					sender.sendMessage(ChatColor.RED + "Your warning has been denied!");
+					return true;
+				}
+			}
 			plugin.db.addPlayer(p, reason, admin, 0, 2);
 			log.log(Level.INFO, "[UltraBan] " + admin + " warned player " + p + ".");
 			if(broadcast){ 
@@ -132,14 +148,14 @@ public class Warn implements CommandExecutor{
 				plugin.getServer().broadcastMessage(formatMessage(warnMsgBroadcast));
 				return true;
 			}else{
-					String warnMsgVictim = config.getString("messages.warnMsgVictim", "You have been warned by %admin%. Reason: %reason%");
-					warnMsgVictim = warnMsgVictim.replaceAll("%admin%", admin);
-					warnMsgVictim = warnMsgVictim.replaceAll("%reason%", reason);
-					String warnMsgBroadcast = config.getString("messages.warnMsgBroadcast", "%victim% was warned by %admin%. Reason: %reason%");
-					warnMsgBroadcast = warnMsgBroadcast.replaceAll("%admin%", admin);
-					warnMsgBroadcast = warnMsgBroadcast.replaceAll("%reason%", reason);
-					warnMsgBroadcast = warnMsgBroadcast.replaceAll("%victim%", p);
-					sender.sendMessage(formatMessage(":S:" + warnMsgBroadcast));
+				String warnMsgVictim = config.getString("messages.warnMsgVictim", "You have been warned by %admin%. Reason: %reason%");
+				warnMsgVictim = warnMsgVictim.replaceAll("%admin%", admin);
+				warnMsgVictim = warnMsgVictim.replaceAll("%reason%", reason);
+				String warnMsgBroadcast = config.getString("messages.warnMsgBroadcast", "%victim% was warned by %admin%. Reason: %reason%");
+				warnMsgBroadcast = warnMsgBroadcast.replaceAll("%admin%", admin);
+				warnMsgBroadcast = warnMsgBroadcast.replaceAll("%reason%", reason);
+				warnMsgBroadcast = warnMsgBroadcast.replaceAll("%victim%", p);
+				sender.sendMessage(formatMessage(":S:" + warnMsgBroadcast));
 				return true;
 			}
 		}
