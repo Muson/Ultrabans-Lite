@@ -36,6 +36,8 @@ import com.modcrafting.ultrabans.commands.Unban;
 import com.modcrafting.ultrabans.commands.Version;
 import com.modcrafting.ultrabans.commands.Warn;
 import com.modcrafting.ultrabans.db.SQLDatabases;
+import com.modcrafting.ultrabans.util.DataHandler;
+import com.modcrafting.ultrabans.util.Formatting;
 
 public class UltraBan extends JavaPlugin {
 
@@ -47,6 +49,8 @@ public class UltraBan extends JavaPlugin {
 	public Map<String, Long> tempBans = new HashMap<String, Long>();
 	public Map<String, EditBan> banEditors = new HashMap<String, EditBan>();
 	private final UltraBanPlayerListener playerListener = new UltraBanPlayerListener(this);
+	public DataHandler data = new DataHandler(this);
+	public Formatting util = new Formatting(this);
 	public boolean autoComplete;
 	
 	public void onDisable() {
