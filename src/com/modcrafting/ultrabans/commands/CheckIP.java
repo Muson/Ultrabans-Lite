@@ -36,7 +36,7 @@ public class CheckIP implements CommandExecutor{
 		if (!auth){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
 			return true;
-		}else{
+		}
 		if (args.length < 1) return false;
 		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin,new Runnable(){
 
@@ -58,7 +58,7 @@ public class CheckIP implements CommandExecutor{
 			try {
 				boolean ping = InetP.isReachable(config.getInt("HostTimeOut", 1800));
 				if (ping){
-					sender.sendMessage(ChatColor.YELLOW + "Ping Test Passed.");
+					sender.sendMessage(ChatColor.GREEN + "Ping Test Passed.");
 				}else{
 					sender.sendMessage(ChatColor.RED + "Ping Test Failed.");
 				}
@@ -71,6 +71,6 @@ public class CheckIP implements CommandExecutor{
 			}
 		});
 		return true;
-		}
+		
 	}
 }

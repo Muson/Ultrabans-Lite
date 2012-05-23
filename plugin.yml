@@ -1,5 +1,5 @@
 name: UltraBanLite
-version: 0.2.7
+version: 0.2.8
 website: http://modcrafting.com
 author: Deathmarine
 description: >
@@ -27,6 +27,9 @@ commands:
     usage: /<command> {player}
   checkip:
     description: Check a players ip
+    usage: /<command> {player}
+  dupeip:
+    description: Check a players ip against all players
     usage: /<command> {player}
   permaban:
     description: Unbannable Banning

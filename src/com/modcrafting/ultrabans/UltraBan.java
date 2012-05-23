@@ -20,8 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.modcrafting.ultrabans.commands.Ban;
 import com.modcrafting.ultrabans.commands.Check;
 import com.modcrafting.ultrabans.commands.CheckIP;
-import com.modcrafting.ultrabans.commands.EditBan;
-import com.modcrafting.ultrabans.commands.EditCommand;
+import com.modcrafting.ultrabans.commands.DupeIP;
+import com.modcrafting.ultrabans.commands.Edit;
 import com.modcrafting.ultrabans.commands.Export;
 import com.modcrafting.ultrabans.commands.Help;
 import com.modcrafting.ultrabans.commands.History;
@@ -37,6 +37,7 @@ import com.modcrafting.ultrabans.commands.Version;
 import com.modcrafting.ultrabans.commands.Warn;
 import com.modcrafting.ultrabans.db.SQLDatabases;
 import com.modcrafting.ultrabans.util.DataHandler;
+import com.modcrafting.ultrabans.util.EditBan;
 import com.modcrafting.ultrabans.util.Formatting;
 
 public class UltraBan extends JavaPlugin {
@@ -51,6 +52,9 @@ public class UltraBan extends JavaPlugin {
 	private final UltraBanPlayerListener playerListener = new UltraBanPlayerListener(this);
 	public DataHandler data = new DataHandler(this);
 	public Formatting util = new Formatting(this);
+	public String regexAdmin = "%admin%";
+	public String regexReason = "%reason%";
+	public String regexVictim = "%victim%";
 	public boolean autoComplete;
 	
 	public void onDisable() {
@@ -115,7 +119,8 @@ public class UltraBan extends JavaPlugin {
 		getCommand("ban").setExecutor(new Ban(this));
 		getCommand("checkban").setExecutor(new Check(this));
 		getCommand("checkip").setExecutor(new CheckIP(this));
-		getCommand("editban").setExecutor(new EditCommand(this));
+		getCommand("dupeip").setExecutor(new DupeIP(this));
+		getCommand("editban").setExecutor(new Edit(this));
 		getCommand("importbans").setExecutor(new Import(this));
 		getCommand("exportbans").setExecutor(new Export(this));
 		getCommand("uhelp").setExecutor(new Help(this));

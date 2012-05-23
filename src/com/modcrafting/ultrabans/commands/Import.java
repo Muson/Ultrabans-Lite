@@ -64,7 +64,6 @@ public class Import implements CommandExecutor{
 			String ip;
 			
 			while ((ip = bannedIP.readLine()) != null){
-				  // add it to the database :(
 					if(!plugin.bannedIPs.contains(ip))
 						plugin.bannedIPs.add(ip);
 					String cknullIP = plugin.db.getName(ip);

@@ -13,8 +13,15 @@ sqlite-dbname: banlist
 #parameters#
 auto-complete: true
 #Max Warnings#
-enableMaxWarn: false
+enableMaxWarn: false#
 maxWarnings: 5
+#ban,kick,ipban,perma,tempban,tempipban#
+maxWarnResult: ban
+#Used with Temporary actions#
+maxWarnResulttime:
+  amt: 5
+  #sec,min,hour,day,week,month#
+  mode: day
 #Default labels#
 defAdminName: 'server'
 defReason: 'not sure'
