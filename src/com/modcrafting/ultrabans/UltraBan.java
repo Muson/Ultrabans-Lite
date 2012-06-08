@@ -42,7 +42,7 @@ import com.modcrafting.ultrabans.util.Formatting;
 
 public class UltraBan extends JavaPlugin {
 
-	public final static Logger log = Logger.getLogger("Minecraft");
+	public Logger log = Logger.getLogger("Minecraft");
 	public SQLDatabases db = new SQLDatabases();
 	public String maindir = "plugins/UltraBanLite/";
 	public HashSet<String> bannedPlayers = new HashSet<String>();
