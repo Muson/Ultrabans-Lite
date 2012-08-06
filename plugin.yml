@@ -76,6 +76,7 @@ permissions:
       ultraban.unban: true
       ultraban.check: true
       ultraban.checkip: true
+      ultraban.dupeip: true
       ultraban.kick: true
       ultraban.kick.all: true
       ultraban.warn: true
@@ -135,6 +136,9 @@ permissions:
   ultraban.history:
     default: op
     description: Allows the Administration to a history of entries
+  ultraban.dupeip:
+    default: op
+    description: Allows the Administration to a check players for duplicate ips
   ultraban.editban:
     default: op
     description: Allows the Administration to edit a previous ban
