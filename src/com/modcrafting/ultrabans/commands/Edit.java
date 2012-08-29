@@ -16,23 +16,20 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.modcrafting.ultrabans.UltraBan;
 import com.modcrafting.ultrabans.util.EditBan;
 
 public class Edit implements CommandExecutor{
 	UltraBan plugin;
-	String permission = "ultraban.editban";
 	public Edit(UltraBan ultraBan){
 		this.plugin = ultraBan;
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(sender instanceof Player)
-			if(!((Player) sender).hasPermission(permission) || !((Player) sender).isOp()){
-				return true;
-			}
+		if(!sender.hasPermission(command.getPermission())){
+			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
+			return true;
+		}
 		if(args.length < 1)
 			return false;
 
@@ -158,7 +155,7 @@ public class Edit implements CommandExecutor{
 					sender.sendMessage(ChatColor.RED + "Usage: reason add <text>");
 					return true;
 				}
-				ban.reason += " " + combineSplit(2, args, " ");
+				ban.reason += " " + plugin.util.combineSplit(2, args, " ");
 				return true;
 			}
 
@@ -167,7 +164,7 @@ public class Edit implements CommandExecutor{
 					sender.sendMessage(ChatColor.RED + "Usage: reason set <text>");
 					return true;
 				}
-				ban.reason = combineSplit(2, args, " ");
+				ban.reason = plugin.util.combineSplit(2, args, " ");
 				return true;
 			}
 		}
@@ -178,7 +175,7 @@ public class Edit implements CommandExecutor{
 				return true;
 			}
 
-			long time = parseTimeSpec(args[2], args[3]);
+			long time = plugin.util.parseTimeSpec(args[2], args[3]);
 			if(time == 0){
 				sender.sendMessage(ChatColor.RED + "Invalid time format");
 				return true;
@@ -198,27 +195,6 @@ public class Edit implements CommandExecutor{
 		return false;		
 
 	}
-	public static long parseTimeSpec(String time, String unit) {
-		long sec;
-		try {
-			sec = Integer.parseInt(time)*60;
-		} catch (NumberFormatException ex) {
-			return 0;
-		}
-		if (unit.startsWith("hour"))
-			sec *= 60;
-		else if (unit.startsWith("day"))
-			sec *= (60*24);
-		else if (unit.startsWith("week"))
-			sec *= (7*60*24);
-		else if (unit.startsWith("month"))
-			sec *= (30*60*24);
-		else if (unit.startsWith("min"))
-			sec *= 1;
-		else if (unit.startsWith("sec"))
-			sec /= 60;
-		return sec;
-	}
 
 	private void showBanInfo(EditBan eb, CommandSender sender){
 		DateFormat shortTime = DateFormat.getDateTimeInstance();
@@ -226,16 +202,5 @@ public class Edit implements CommandExecutor{
 		if(eb.endTime > 0)
 			sender.sendMessage(ChatColor.GOLD+" | "+ChatColor.YELLOW+"Will be unbanned at " + shortTime.format((new Date(eb.endTime*1000))));
 		sender.sendMessage(ChatColor.GOLD+" | "+ChatColor.YELLOW+"Reason: " + ChatColor.GRAY + eb.reason);
-	}
-	public String combineSplit(int startIndex, String[] string, String seperator) {
-		StringBuilder builder = new StringBuilder();
-
-		for (int i = startIndex; i < string.length; i++) {
-			builder.append(string[i]);
-			builder.append(seperator);
-		}
-
-		builder.deleteCharAt(builder.length() - seperator.length()); // remove
-		return builder.toString();
 	}
 }

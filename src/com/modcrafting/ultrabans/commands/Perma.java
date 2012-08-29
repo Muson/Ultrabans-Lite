@@ -7,9 +7,6 @@
  */
 package com.modcrafting.ultrabans.commands;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,31 +16,24 @@ import org.bukkit.entity.Player;
 import com.modcrafting.ultrabans.UltraBan;
 
 public class Perma implements CommandExecutor{
-	public static final Logger log = Logger.getLogger("Minecraft");
 	UltraBan plugin;
-	String permission = "ultraban.permaban";
 	public Perma(UltraBan ultraBan) {
 		this.plugin = ultraBan;
 	}
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
-		boolean auth = false;
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    	YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
 		boolean broadcast = true;
 		Player player = null;
-		String reason = config.getString("defReason", "not sure");
 		String admin = config.getString("defAdminName", "server");
+		String reason = config.getString("defReason", "not sure");
 		if (sender instanceof Player){
 			player = (Player)sender;
-			if(player.hasPermission(permission) || player.isOp()) auth = true;
 			admin = player.getName();
-		}else{
-			auth = true;
 		}
-		if (!auth){
+		if(!sender.hasPermission(command.getPermission())){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
 			return true;
 		}
-
 		if (args.length < 1) return false;
 		String p = args[0];
 		
@@ -101,7 +91,7 @@ public class Perma implements CommandExecutor{
 		if(adminMsg.contains(plugin.regexAdmin)) adminMsg = adminMsg.replaceAll(plugin.regexAdmin, admin);
 		if(adminMsg.contains(plugin.regexReason)) adminMsg = adminMsg.replaceAll(plugin.regexReason, reason);
 		victim.kickPlayer(plugin.util.formatMessage(adminMsg));
-		
+
 		String permbanMsgBroadcast = config.getString("messages.permbanMsgBroadcast", "%victim% has been permabanned by %admin%. Reason: %reason%");
 		if(permbanMsgBroadcast.contains(plugin.regexAdmin)) permbanMsgBroadcast = permbanMsgBroadcast.replaceAll(plugin.regexAdmin, admin);
 		if(permbanMsgBroadcast.contains(plugin.regexReason)) permbanMsgBroadcast = permbanMsgBroadcast.replaceAll(plugin.regexReason, reason);
@@ -113,7 +103,7 @@ public class Perma implements CommandExecutor{
 				sender.sendMessage(ChatColor.ITALIC + "Silent: " + plugin.util.formatMessage(permbanMsgBroadcast));
 			}
 		}
-		log.log(Level.INFO, "[UltraBan] " + admin + " permabanned player " + victim.getName() + ".");
+		plugin.getLogger().info(admin + " permabanned player " + victim.getName() + ".");
 		return true;
 	}
 }

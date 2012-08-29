@@ -7,9 +7,6 @@
  */
 package com.modcrafting.ultrabans.commands;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,41 +17,30 @@ import org.bukkit.entity.Player;
 import com.modcrafting.ultrabans.UltraBan;
 
 public class Warn implements CommandExecutor{
-	public static final Logger log = Logger.getLogger("Minecraft");
 	UltraBan plugin;
-	String permission = "ultraban.warn";
 	public Warn(UltraBan ultraBan) {
 		this.plugin = ultraBan;
 	}
-	
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
-		boolean auth = false;
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    	YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
+		boolean broadcast = true;
 		Player player = null;
 		String admin = config.getString("defAdminName", "server");
+		String reason = config.getString("defReason", "not sure");
 		if (sender instanceof Player){
 			player = (Player)sender;
-
-			if(player.hasPermission(permission) || player.isOp()) auth = true;
 			admin = player.getName();
-		}else{
-			auth = true; //if sender is not a player - Console
 		}
-		if (!auth){
+		if(!sender.hasPermission(command.getPermission())){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
 			return true;
 		}
-		// Has enough arguments?
 		if (args.length < 1) return false;
 
-		String p = args[0]; // Get the victim's name from the command
+		String p = args[0];
 		if(plugin.autoComplete)
-			p = plugin.util.expandName(p); //If the admin has chosen to do so, autocomplete the name!
-		Player victim = plugin.getServer().getPlayer(p); // What player is really the victim?
-		// Reason stuff
-		String reason = config.getString("defReason", "not sure");
-		
-		boolean broadcast = true;
+			p = plugin.util.expandName(p);
+		Player victim = plugin.getServer().getPlayer(p);
 		if(args.length > 1){
 			if(args[1].equalsIgnoreCase("-s")){
 				broadcast = false;
@@ -112,7 +98,7 @@ public class Warn implements CommandExecutor{
 			}
 			
 			plugin.db.addPlayer(victim.getName(), reason, admin, 0, 2);
-			log.log(Level.INFO, "[UltraBan] " + admin + " warned player " + victim.getName() + ".");
+			plugin.getLogger().info(admin + " warned player " + victim.getName() + ".");
 			String warnMsgBroadcast = config.getString("messages.warnMsgBroadcast", "%victim% was warned by %admin%. Reason: %reason%");
 			warnMsgBroadcast = warnMsgBroadcast.replaceAll(plugin.regexAdmin, admin);
 			warnMsgBroadcast = warnMsgBroadcast.replaceAll(plugin.regexReason, reason);
@@ -145,7 +131,7 @@ public class Warn implements CommandExecutor{
 				}
 			}
 			plugin.db.addPlayer(p, reason, admin, 0, 2);
-			log.log(Level.INFO, "[UltraBan] " + admin + " warned player " + p + ".");
+			plugin.getLogger().info(admin + " warned player " + p + ".");
 			if(broadcast){ 
 				plugin.getServer().broadcastMessage(plugin.util.formatMessage(warnMsgBroadcast));
 				return true;

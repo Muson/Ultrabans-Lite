@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -42,20 +43,20 @@ import com.modcrafting.ultrabans.commands.Tempipban;
 import com.modcrafting.ultrabans.commands.Unban;
 import com.modcrafting.ultrabans.commands.Version;
 import com.modcrafting.ultrabans.commands.Warn;
-import com.modcrafting.ultrabans.db.SQLDatabases;
+import com.modcrafting.ultrabans.db.Database;
+import com.modcrafting.ultrabans.db.SQL;
+import com.modcrafting.ultrabans.db.SQLite;
 import com.modcrafting.ultrabans.util.DataHandler;
 import com.modcrafting.ultrabans.util.EditBan;
 import com.modcrafting.ultrabans.util.Formatting;
 
 public class UltraBan extends JavaPlugin {
-
-	public Logger log = Logger.getLogger("Minecraft");
-	public SQLDatabases db = new SQLDatabases();
 	public String maindir = "plugins/UltraBanLite/";
 	public HashSet<String> bannedPlayers = new HashSet<String>();
 	public HashSet<String> bannedIPs = new HashSet<String>();
 	public Map<String, Long> tempBans = new HashMap<String, Long>();
 	public Map<String, EditBan> banEditors = new HashMap<String, EditBan>();
+	public Database db;
 	private final UltraBanPlayerListener playerListener = new UltraBanPlayerListener(this);
 	public DataHandler data = new DataHandler(this);
 	public Formatting util = new Formatting(this);
@@ -63,63 +64,41 @@ public class UltraBan extends JavaPlugin {
 	public String regexReason = "%reason%";
 	public String regexVictim = "%victim%";
 	public boolean autoComplete;
-	
 	public void onDisable() {
+		this.getServer().getScheduler().cancelTasks(this);
 		tempBans.clear();
 		bannedPlayers.clear();
 		bannedIPs.clear();
 		banEditors.clear();
-		System.out.println("UltraBan disabled.");
-	}
-	protected void createDefaultConfiguration(String name) {
-		File actual = new File(getDataFolder(), name);
-		if (!actual.exists()) {
-
-			InputStream input =
-				this.getClass().getResourceAsStream("/" + name);
-			if (input != null) {
-				FileOutputStream output = null;
-
-				try {
-					output = new FileOutputStream(actual);
-					byte[] buf = new byte[8192];
-					int length = 0;
-					while ((length = input.read(buf)) > 0) {
-						output.write(buf, 0, length);
-					}
-
-					System.out.println(getDescription().getName()
-							+ ": Default configuration file written: " + name);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						if (input != null)
-							input.close();
-					} catch (IOException e) {}
-
-					try {
-						if (output != null)
-							output.close();
-					} catch (IOException e) {}
-				}
-			}
-		}
 	}
 	public void onEnable() {
-		YamlConfiguration Config = (YamlConfiguration) getConfig();
-		PluginDescriptionFile pdfFile = this.getDescription();
-		new File(maindir).mkdir();
-		createDefaultConfiguration("config.yml"); //Swap for new setup
-		this.autoComplete = Config.getBoolean("auto-complete", true);
-		loadCommands();
-		if (Config != null) log.log(Level.INFO, "[" + pdfFile.getName() + "]" + " Configuration: config.yml Loaded!");
-		db.initialize(this);
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(playerListener, this);
-		log.log(Level.INFO, "[" + pdfFile.getName() + "] Listeners enabled, Server is secured.");
-		log.log(Level.INFO,"[" + pdfFile.getName() + "]" + " version " + pdfFile.getVersion() + " has been initialized!" );
+		this.getDataFolder().mkdir();
+		data.createDefaultConfiguration("config.yml");
+		FileConfiguration config = getConfig();
+		autoComplete = config.getBoolean("auto-complete", true);
+		long l = config.getLong("serverSync.timing", 72000L); 
+		long time = System.currentTimeMillis();
+		if(this.getConfig().getString("Database").equalsIgnoreCase("mysql")){
+			db = new SQL(this);
+		}else{
+			db = new SQLite(this);
+		}
+		db.load();
 		
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(new UltraBanPlayerListener(this), this);
+		if(config.getBoolean("serverSync.enable", false)) this.getServer().getScheduler().scheduleAsyncRepeatingTask(this,new Runnable(){
+			@Override
+			public void run() {
+				onDisable();
+				db.load();
+				System.out.println("UltraBans Sync is Enabled!");
+			}
+			
+		},l,l);	
+		loadCommands();
+		long diff = System.currentTimeMillis()-time;
+		this.getLogger().info(" Loaded. "+diff+"ms");
 	}
 	public void loadCommands(){
 

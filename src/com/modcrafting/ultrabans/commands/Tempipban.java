@@ -7,9 +7,6 @@
  */
 package com.modcrafting.ultrabans.commands;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,27 +17,21 @@ import org.bukkit.entity.Player;
 import com.modcrafting.ultrabans.UltraBan;
 
 public class Tempipban implements CommandExecutor{
-	public static final Logger log = Logger.getLogger("Minecraft");
 	UltraBan plugin;
-	String permission = "ultraban.tempipban";
 	public Tempipban(UltraBan ultraBan) {
 		this.plugin = ultraBan;
 	}
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
-		boolean auth = false;
-		Player player = null;
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    	YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
 		boolean broadcast = true;
-		String reason = config.getString("defReason", "not sure");
+		Player player = null;
 		String admin = config.getString("defAdminName", "server");
+		String reason = config.getString("defReason", "not sure");
 		if (sender instanceof Player){
 			player = (Player)sender;
-			if(player.hasPermission(permission) || player.isOp()) auth = true;
 			admin = player.getName();
-		}else{
-			auth = true; //if sender is not a player - Console
 		}
-		if (!auth){
+		if(!sender.hasPermission(command.getPermission())){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
 			return true;
 		}
@@ -99,7 +90,7 @@ public class Tempipban implements CommandExecutor{
 				if(tempbanMsgVictim.contains(plugin.regexAdmin)) tempbanMsgVictim = tempbanMsgVictim.replaceAll(plugin.regexAdmin, admin);
 				if(tempbanMsgVictim.contains(plugin.regexReason)) tempbanMsgVictim = tempbanMsgVictim.replaceAll(plugin.regexReason, reason);
 				victim.kickPlayer(plugin.util.formatMessage(tempbanMsgVictim));
-				log.log(Level.INFO, "[UltraBan] " + admin + " tempbanned player " + victim.getName() + ".");
+				plugin.getLogger().info(admin + " tempbanned player " + victim.getName() + ".");
 				return true;
 			}
 			plugin.tempBans.put(victim.getName().toLowerCase(), temp);
@@ -121,7 +112,7 @@ public class Tempipban implements CommandExecutor{
 			if(tempbanMsgVictim.contains(plugin.regexAdmin)) tempbanMsgVictim = tempbanMsgVictim.replaceAll(plugin.regexAdmin, admin);
 			if(tempbanMsgVictim.contains(plugin.regexReason)) tempbanMsgVictim = tempbanMsgVictim.replaceAll(plugin.regexReason, reason);
 			victim.kickPlayer(plugin.util.formatMessage(tempbanMsgVictim));
-			log.log(Level.INFO, "[UltraBan] " + admin + " tempipbanned player " + victim.getName() + ".");
+			plugin.getLogger().info(admin + " tempipbanned player " + victim.getName() + ".");
 			return true;
 		}else{
 			victim = plugin.getServer().getOfflinePlayer(p).getPlayer();
@@ -154,7 +145,7 @@ public class Tempipban implements CommandExecutor{
 					sender.sendMessage(ChatColor.ITALIC + "Silent: " + plugin.util.formatMessage(tempbanMsgBroadcast));
 				}
 			}
-			log.log(Level.INFO, "[UltraBan] " + admin + " tempbanned player " + p + ".");
+			plugin.getLogger().info(admin + " tempbanned player " + p + ".");
 			return true;
 		}
 	}

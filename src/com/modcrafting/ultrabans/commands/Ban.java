@@ -7,9 +7,6 @@
  */
 package com.modcrafting.ultrabans.commands;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,27 +16,19 @@ import org.bukkit.entity.Player;
 import com.modcrafting.ultrabans.UltraBan;
 
 public class Ban implements CommandExecutor{
-	public static final Logger log = Logger.getLogger("Minecraft");
 	UltraBan plugin;
-	String permission = "ultraban.ban";
 	public Ban(UltraBan ultraBan) {
 		this.plugin = ultraBan;
 	}
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     	YamlConfiguration config = (YamlConfiguration) plugin.getConfig();
-		boolean auth = false;
 		boolean broadcast = true;
-		Player player = null;
 		String admin = config.getString("defAdminName", "server");
 		String reason = config.getString("defReason", "not sure");
 		if (sender instanceof Player){
-			player = (Player)sender;
-			if(player.hasPermission(permission) || player.isOp()) auth = true;
-			admin = player.getName();
-		}else{
-			auth = true;
+			admin = sender.getName();
 		}
-		if (!auth){
+		if(!sender.hasPermission(command.getPermission())){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
 			return true;
 		}
@@ -83,20 +72,23 @@ public class Ban implements CommandExecutor{
 		 * Offline Ban
 		 */
 		if(victim == null){
+			//Fix Player not found NPE.
+			String name = p;
 			victim = plugin.getServer().getOfflinePlayer(p).getPlayer();
 			if(victim != null){
 				if(victim.hasPermission( "ultraban.override.ban")){
 					sender.sendMessage(ChatColor.RED + "Your ban has been denied!");
 					return true;
 				}
+				name = victim.getName();
 			}
 			String banMsgBroadcast = config.getString("messages.banMsgBroadcast", "%victim% was banned by %admin%. Reason: %reason%");
 			if(banMsgBroadcast.contains(plugin.regexAdmin)) banMsgBroadcast = banMsgBroadcast.replaceAll(plugin.regexAdmin, admin);
 			if(banMsgBroadcast.contains(plugin.regexReason)) banMsgBroadcast = banMsgBroadcast.replaceAll(plugin.regexReason, reason);
 			if(banMsgBroadcast.contains(plugin.regexVictim)) banMsgBroadcast = banMsgBroadcast.replaceAll(plugin.regexVictim, p.toLowerCase());
-			plugin.bannedPlayers.add(p.toLowerCase());
-			plugin.db.addPlayer(p.toLowerCase(), reason, admin, 0, 0);
-			log.log(Level.INFO, "[UltraBan] " + admin + " banned player " + p + ".");
+			plugin.bannedPlayers.add(name.toLowerCase());
+			plugin.db.addPlayer(name, reason, admin, 0, 0);
+			plugin.getLogger().info(" " + admin + " banned player " + p + ".");
 			if(broadcast){
 				plugin.getServer().broadcastMessage(plugin.util.formatMessage(banMsgBroadcast));
 			}else{
@@ -104,11 +96,6 @@ public class Ban implements CommandExecutor{
 			}
 			return true;			
 		}
-		/*
-		 * End of Offline
-		 */
-		
-		//Emo-Command
 		if(victim.getName().equalsIgnoreCase(admin)){
 			sender.sendMessage(ChatColor.RED + "You cannot ban yourself!");
 			return true;
@@ -133,17 +120,13 @@ public class Ban implements CommandExecutor{
 		if(banMsgBroadcast.contains(plugin.regexAdmin)) banMsgBroadcast = banMsgBroadcast.replaceAll(plugin.regexAdmin, admin);
 		if(banMsgBroadcast.contains(plugin.regexReason)) banMsgBroadcast = banMsgBroadcast.replaceAll(plugin.regexReason, reason);
 		if(banMsgBroadcast.contains(plugin.regexVictim)) banMsgBroadcast = banMsgBroadcast.replaceAll(plugin.regexVictim, p.toLowerCase());
-
-		//Completion
 		victim.kickPlayer(plugin.util.formatMessage(banMsgVictim));
 		if(broadcast){
 			plugin.getServer().broadcastMessage(plugin.util.formatMessage(banMsgBroadcast));
 		}else{
 			sender.sendMessage(ChatColor.ITALIC + "Silent: " + plugin.util.formatMessage(banMsgBroadcast));
 		}
-		
-		//Log
-		log.log(Level.INFO, "[UltraBan] " + admin + " banned player " + victim.getName() + ".");
+		plugin.getLogger().info(admin + " banned player " + victim.getName() + ".");
 		return true;
 	}
 }

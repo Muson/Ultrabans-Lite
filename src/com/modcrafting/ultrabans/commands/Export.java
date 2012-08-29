@@ -13,67 +13,52 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.modcrafting.ultrabans.UltraBan;
 
 public class Export implements CommandExecutor{
-	public static final Logger log = Logger.getLogger("Minecraft");
 	UltraBan plugin;
-	String permission = "ultraban.export";
 	public Export(UltraBan ultraBan) {
 		this.plugin = ultraBan;
 	}
-	public boolean onCommand(final CommandSender sender, Command command, String commandLabel, String[] args) {
-		boolean auth = false;
-		Player player = null;
-		if (sender instanceof Player){
-			player = (Player)sender;
-			if(player.hasPermission(permission)) auth = true;
-		}else{
-			auth = true;
-		}
-		if (auth) {
-			plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin,new Runnable(){
-
-				@Override
-				public void run() {
-					try
-					{
-						BufferedWriter banlist = new BufferedWriter(new FileWriter("banned-players.txt",true));
-						for(String p : plugin.bannedPlayers){
-							banlist.newLine();
-							banlist.write(g(p));
-						}
-						banlist.close();
-						BufferedWriter iplist = new BufferedWriter(new FileWriter("banned-ips.txt",true));
-						for(String p : plugin.bannedIPs){
-							iplist.newLine();
-							iplist.write(g(p));
-						}
-						iplist.close();
-					}
-					catch(IOException e)          
-					{
-						plugin.log.log(Level.SEVERE,"UltraBan: Couldn't write to banned-players.txt");
-					}
-					sender.sendMessage("§2Exported banlist to banned-players.txt.");
-					sender.sendMessage("§2Exported iplist to banned-ips.txt.");
-				}
-				
-			});
-			
-			return true;
-		}else{
+	public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
+		if(!sender.hasPermission(command.getPermission())){
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");
 			return true;
 		}
+		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin,new Runnable(){
+
+			@Override
+			public void run() {
+				try
+				{
+					BufferedWriter banlist = new BufferedWriter(new FileWriter("banned-players.txt",true));
+					for(String p : plugin.bannedPlayers){
+						banlist.newLine();
+						banlist.write(g(p));
+					}
+					banlist.close();
+					BufferedWriter iplist = new BufferedWriter(new FileWriter("banned-ips.txt",true));
+					for(String p : plugin.bannedIPs){
+						iplist.newLine();
+						iplist.write(g(p));
+					}
+					iplist.close();
+				}
+				catch(IOException e)          
+				{
+					plugin.getLogger().log(Level.SEVERE,"UltraBan: Couldn't write to banned-players.txt");
+				}
+				sender.sendMessage("§2Exported banlist to banned-players.txt.");
+				sender.sendMessage("§2Exported iplist to banned-ips.txt.");
+			}
+			
+		});
+		
+		return true;
 	}
 	//Thanks jeb_
 	public String g(String player) {
