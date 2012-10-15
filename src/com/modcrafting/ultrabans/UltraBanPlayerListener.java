@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import com.modcrafting.ultrabans.UltraBan;
+import com.modcrafting.ultrabans.util.Formatting;
 
 public class UltraBanPlayerListener implements Listener{
 	UltraBan plugin;
@@ -59,17 +60,18 @@ public class UltraBanPlayerListener implements Listener{
 				}
 				plugin.tempBans.remove(player.getName().toLowerCase());
 				plugin.bannedPlayers.remove(player.getName().toLowerCase());
-				plugin.db.removeFromBanlist(player.getName().toLowerCase());
-				String admin = config.getString("defAdminName", "server");
 				String reason = plugin.db.getBanReason(player.getName());
+                                plugin.db.removeFromBanlist(player.getName().toLowerCase());
+				String admin = config.getString("defAdminName", "server");
 				plugin.db.addPlayer(player.getName(), "Untempbanned: " + reason, admin, 0, 5);
 				return;
 			}
 			Date date = new Date();
 			date.setTime(tempTime*1000);
-			String dateStr = date.toString();
+                        
+			String dateStr = Formatting.getUnbanTime(tempTime*1000);//date.toString();
 			String reason = plugin.db.getBanReason(player.getName());
-			String adminMsg = "You've been tempbanned for " + reason + " Remaining:" + dateStr;
+			String adminMsg = "You've been tempbanned for " + reason + " Remaining: " + dateStr;
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, adminMsg);
 			return;
 		}

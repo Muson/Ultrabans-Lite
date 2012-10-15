@@ -14,6 +14,7 @@ import java.util.regex.PatternSyntaxException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.modcrafting.ultrabans.UltraBan;
+import java.util.Date;
 
 public class Formatting {
 	UltraBan plugin;
@@ -115,4 +116,28 @@ public class Formatting {
 			sec /= 60;
 		return sec;
 	}
+        
+        public static String getUnbanTime(long banDate) {
+            long dat = banDate - System.currentTimeMillis();
+            String res = "";
+            
+            if (dat < 0) return "0 m.";
+            
+            dat = dat/1000;
+            
+            res = dat%60 + " s.";
+            dat = dat / 60;
+            if (dat > 0) {
+                res = dat%60+" m. " + res;
+                dat = dat / 60;
+            }
+            if (dat > 0) {
+                res = dat%24+" h. " +res;
+                dat = dat / 24;
+            }
+            if (dat > 0)
+                res = dat+" d. " + res;
+            
+            return res;
+        }
 }

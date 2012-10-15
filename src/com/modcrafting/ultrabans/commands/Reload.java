@@ -23,7 +23,7 @@ public class Reload implements CommandExecutor{
 			plugin.reloadConfig();
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 			plugin.getServer().getPluginManager().enablePlugin(plugin);
-			sender.sendMessage("§2[UltraBan] reloaded.");
+			sender.sendMessage("&2[UltraBan] reloaded.");
 			return true;
 		}else{
 			sender.sendMessage(ChatColor.RED + "You do not have the required permissions.");

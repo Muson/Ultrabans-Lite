@@ -541,4 +541,26 @@ public class SQLite implements Database{
 			Error.close(plugin, ex);
 		}
 	}
+
+    @Override
+    public int countRecordsByType(String player, int type) {
+        // Not checked...
+                Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			conn = getSQLConnection();
+			ps = conn.prepareStatement("SELECT count(*) FROM banlist WHERE name = ? AND type = ?");
+			ps.setString(1, player);
+			ps.setInt(2, type);
+			rs = ps.executeQuery();
+			List<EditBan> bans = new ArrayList<EditBan>();
+			int num = rs.getInt(0);
+			close(conn,ps,rs);
+			return num;
+		} catch (SQLException ex) {
+			Error.execute(plugin, ex);
+		}
+		return 0;
+    }
 }

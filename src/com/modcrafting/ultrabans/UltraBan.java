@@ -31,6 +31,7 @@ import com.modcrafting.ultrabans.commands.CheckIP;
 import com.modcrafting.ultrabans.commands.DupeIP;
 import com.modcrafting.ultrabans.commands.Edit;
 import com.modcrafting.ultrabans.commands.Export;
+import com.modcrafting.ultrabans.commands.Extban;
 import com.modcrafting.ultrabans.commands.Help;
 import com.modcrafting.ultrabans.commands.History;
 import com.modcrafting.ultrabans.commands.Import;
@@ -63,6 +64,7 @@ public class UltraBan extends JavaPlugin {
 	public String regexAdmin = "%admin%";
 	public String regexReason = "%reason%";
 	public String regexVictim = "%victim%";
+        public String regexExtCount = "%count%";
 	public boolean autoComplete;
 	public void onDisable() {
 		this.getServer().getScheduler().cancelTasks(this);
@@ -120,6 +122,7 @@ public class UltraBan extends JavaPlugin {
 		getCommand("warn").setExecutor(new Warn(this));
 		getCommand("permaban").setExecutor(new Perma(this));
 		getCommand("history").setExecutor(new History(this));
+                getCommand("extban").setExecutor(new Extban(this));
 	}
 }
 

@@ -83,12 +83,12 @@ public class SQL implements Database{
 			"`id` int(11) NOT NULL AUTO_INCREMENT," + 
 			"`type` int(1) NOT NULL DEFAULT '0'," + 
 			"PRIMARY KEY (`id`) USING BTREE" + 
-			") ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;";
+			") ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;";
 	public String SQLCreateBanipTable = "CREATE TABLE IF NOT EXISTS %table% (" +
 			"`name` varchar(32) NOT NULL," + 
 			"`lastip` tinytext NOT NULL," + 
 			"PRIMARY KEY (`name`)" + 
-			") ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;";
+			") ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;";
 	@Override
 	public void load() {
 
@@ -515,7 +515,7 @@ public class SQL implements Database{
 		ResultSet rs = null;
 		try {
 			conn = getSQLConnection();
-			ps = conn.prepareStatement("SELECT * FROM " + logip + " WHERE ip = ?");
+			ps = conn.prepareStatement("SELECT * FROM " + logip + " WHERE lastip = ?");
 			ps.setString(1, ip);
 			rs = ps.executeQuery();
 			List<String> bans = new ArrayList<String>();
@@ -541,4 +541,27 @@ public class SQL implements Database{
 			Error.close(plugin, ex);
 		}
 	}
+
+    @Override
+    public int countRecordsByType(String player, int type) {
+                Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			conn = getSQLConnection();
+			ps = conn.prepareStatement("SELECT COUNT(*) FROM " + mysqlTable + " WHERE name like ? AND type = ?");
+			ps.setString(1, player);
+			ps.setInt(2, type);
+			rs = ps.executeQuery();
+                        rs.next();
+			int num = rs.getInt(1);
+			close(conn,ps,rs);
+			return num;
+		} catch (SQLException ex) {
+			Error.execute(plugin, ex);
+		}
+		return 0;
+    }
+
+
 }
